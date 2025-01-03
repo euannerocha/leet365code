@@ -6,7 +6,7 @@ var createHelloWorld = (): (...args: any) => string => {
     }
 }
 
-//TESTINGGGGG
+//TESTING
 
 const helloFunction = createHelloWorld();
 console.log(helloFunction(1, "test", true));
