@@ -1,26 +1,19 @@
 //SOLUTION
 
-function createCounter(n: number) {
-    let current = n;
-    
-    return function() {
-      return current++;
-    }
+function createCounter (initialCount: number = 0){
+  let count = initialCount;
+  return function() {
+      return count ++;
   }
+}
+
 
 //TESTING
-
- const counter1 = createCounter(10);
- console.log(counter1()); 
- console.log(counter1());
- console.log(counter1());
-
- const counter2 = createCounter(-2);
- console.log(counter2()); 
- console.log(counter2()); 
- console.log(counter2()); 
- console.log(counter2()); 
- console.log(counter2()); 
+createCounter(1);
+createCounter();
+createCounter(4);
+createCounter(10);
+createCounter(11);
 
 // MY EXPLANATION ABOUT THE CODE
 
