@@ -13,8 +13,6 @@ console.log(helloFunction(1, "test", true));
 console.log(helloFunction(1, "test", true, null));
 console.log(helloFunction({ key: "value" }, [1, 2, 3], "another test"));
 
-
-
 // MY EXPLANATION ABOUT THE CODE
 
 // Why I used 2 functions?
@@ -30,12 +28,9 @@ console.log(helloFunction({ key: "value" }, [1, 2, 3], "another test"));
 // If I call this function with ANY arguments (numbers, strings, etc.), it will still return "Hello World" in every case. 
 // It's just a way to handle the return, so the function knows how to deal with any arguments.
 
-
-
 //EXERCISE
 
 // Write a function createHelloWorld. It should return a new function that always returns "Hello World".
- 
 
 // Example 1:
 
@@ -55,7 +50,6 @@ console.log(helloFunction({ key: "value" }, [1, 2, 3], "another test"));
 // f({}, null, 42); // "Hello World"
 
 // Any arguments could be passed to the function but it should still always return "Hello World".
- 
 
 // Constraints:
 

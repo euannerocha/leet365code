@@ -19,7 +19,6 @@ function createCounters(init) {
     };
 }
 
-
 //TESTING
 
 const counter = createCounters(5);
@@ -40,7 +39,6 @@ console.log(counter.decrement());
 // increment() increases the current value by 1 and then returns it.
 // decrement() reduces the current value by 1 and then returns it.
 // reset() sets the current value to init and then returns it.
- 
 
 // Example 1:
 
@@ -62,7 +60,6 @@ console.log(counter.decrement());
 // counter.decrement(); // 1
 // counter.reset(); // 0
 // counter.reset(); // 0
- 
 
 // Constraints:
 

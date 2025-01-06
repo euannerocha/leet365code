@@ -7,7 +7,6 @@ function createCounter (initialCount: number = 0){
   }
 }
 
-
 //TESTING
 createCounter(1);
 createCounter();
@@ -22,7 +21,6 @@ createCounter(11);
 // EXERCISE
 
 // Given an integer n, return a counter function. This counter function initially returns n and then returns 1 more than the previous value every subsequent time it is called (n, n + 1, n + 2, etc).
- 
 
 // Example 1:
 
@@ -41,7 +39,6 @@ createCounter(11);
 // ["call","call","call","call","call"]
 // Output: [-2,-1,0,1,2]
 // Explanation: counter() initially returns -2. Then increases after each sebsequent call.
- 
 
 // Constraints:
 

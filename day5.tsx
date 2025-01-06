@@ -34,8 +34,6 @@ console.log(map([10, 20, 30], constant));
 
 // Please solve it without the built-in Array.map method.
 
- 
-
 // Example 1:
 
 // Input: arr = [1,2,3], fn = function plusone(n) { return n + 1; }
@@ -53,7 +51,6 @@ console.log(map([10, 20, 30], constant));
 // Input: arr = [10,20,30], fn = function constant() { return 42; }
 // Output: [42,42,42]
 // Explanation: The function always returns 42.
- 
 
 // Constraints:
 
