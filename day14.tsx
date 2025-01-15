@@ -1,9 +1,9 @@
 //SOLUTION
 
 type JSONValue = null | boolean | number | string | JSONValue[] | { [key: string]: JSONValue };
-type Fn<T extends JSONValue[]> = (...args: T) => void;
+type Func<T extends JSONValue[]> = (...args: T) => void;
 
-function cancellable<T extends JSONValue[]>(fn: Fn<T>, args: T, tOut: number): Function {
+function cancellable<T extends JSONValue[]>(fn: Func<T>, args: T, tOut: number): Function {
     let cancelTimeout: ReturnType<typeof setTimeout> | null = null;
     let fnTimeout: ReturnType<typeof setTimeout> | null = null;
 
