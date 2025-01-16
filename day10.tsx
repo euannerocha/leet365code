@@ -5,9 +5,9 @@ type OnceFn = (...args: JSONValues[]) => JSONValues | undefined;
 
 function once(fn: Function): OnceFn {
     let hasBeenCalled = false; 
-    let result: JSONValues | undefined;
+    let result;
 
-    return function (...args: JSONValues[]) {
+    return function (...args) {
         if (!hasBeenCalled) {
             hasBeenCalled = true; 
             result = fn(...args); 

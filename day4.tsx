@@ -1,7 +1,7 @@
 //SOLUTION
 
 function createCounters(init) {
-    let currentValue = init; // Keep track of the current value
+    let currentValue = init; 
 
     return {
         increment: () => {

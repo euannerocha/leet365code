@@ -12,12 +12,12 @@ function map<T, U>(arr: T[], fn: (n: T, i: number) => U): U[] {
  
 //TESTING
 
-const arr = [1, 2, 3];
+const arrs = [1, 2, 3];
 const plusone = (n) => n + 1;
-console.log(map(arr, plusone)); 
+console.log(map(arrs, plusone)); 
 
 const plusI = (n, i) => n + i;
-console.log(map(arr, plusI)); 
+console.log(map(arrs, plusI)); 
 
 const constant = () => 42;
 console.log(map([10, 20, 30], constant));
