@@ -27,7 +27,7 @@ function cancellable(fn: Fn, args: JSONValue[], t: number): Function {
     result.push({ "time": diff, "returned": fn(...argsArr as [number]) });
    }
         
-   const cancel = cancellable(log, args, t);
+   const cancel = cancellable(log, args, tMili);
  
    setTimeout(cancel, cancelTimeMs);
     
@@ -40,7 +40,7 @@ function cancellable(fn: Fn, args: JSONValue[], t: number): Function {
                             //     {"time":140,"returned":8},
                             //     {"time":175,"returned":8}
                             // ]
-   }, cancelTimeMs + t + 15)    
+   }, cancelTimeMs + tMili + 15)    
 
 // MY EXPLANATION ABOUT THE CODE
 
