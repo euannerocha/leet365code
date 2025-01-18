@@ -2,7 +2,7 @@
 
 type FnP = (...params: any[]) => Promise<any>;
 
-function timeLimit(fn: Fn, t: number): Fn {
+function timeLimit(fn: FnP, t: number): FnP {
     return async function (...args) {
         const timeout = new Promise<never>((_, reject) =>
             setTimeout(() => reject("Time Limit Exceeded"), t)
