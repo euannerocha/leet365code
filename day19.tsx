@@ -21,8 +21,8 @@ const log = debounce((...inputs) => {
     console.log(inputs);
 }, 50);
 
-log(1);  // cancelled
-log(2);  // cancelled
+log(1);  
+log(2);
 setTimeout(() => log(3), 100); 
 
 // MY EXPLANATION ABOUT THE CODE
