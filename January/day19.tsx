@@ -1,7 +1,7 @@
 //SOLUTION
-type F = (...args: number[]) => void;
+type FuN = (...args: number[]) => void;
 
-function debounce(fn: F, t: number): F {
+function debounce(fn: FuN, t: number): FuN {
     let timer: ReturnType<typeof setTimeout> | null = null;
 
     return function(...args: number[]) {
@@ -17,13 +17,13 @@ function debounce(fn: F, t: number): F {
 
 //TESTING
 
-const log = debounce((...inputs) => {
+const logs = debounce((...inputs) => {
     console.log(inputs);
 }, 50);
 
-log(1);  
-log(2);
-setTimeout(() => log(3), 100); 
+logs(1);  
+logs(2);
+setTimeout(() => logs(3), 100); 
 
 // MY EXPLANATION ABOUT THE CODE
 
