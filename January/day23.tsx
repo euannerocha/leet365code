@@ -1,6 +1,44 @@
 //SOLUTION
 
+type JSONValue = null | boolean | number | string | JSONValue[] | { [key: string]: JSONValue };
+
+export {};
+
+declare global {
+    interface Array<T> {
+        groupBy(fn: (item: T) => string): Record<string, T[]>;
+    }
+}
+
+Array.prototype.groupBy = function<T>(fn: (item: T) => string): Record<string, T[]> {
+    const grouped: Record<string, T[]> = {};
+
+    for (const item of this) {
+        const key = fn(item);
+        if (!(key in grouped)) {
+            grouped[key] = [];
+        }
+        grouped[key].push(item);
+    }
+
+    return grouped;
+};
+
 //TESTING  
+
+console.log([
+    { id: "1" },
+    { id: "1" },
+    { id: "2" }
+  ].groupBy(item => item.id));
+  
+  console.log([
+    [1, 2, 3],
+    [1, 3, 5],
+    [1, 5, 9]
+  ].groupBy(list => String(list[0])));
+  
+  console.log([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].groupBy(n => String(n > 5)));
 
 // MY EXPLANATION ABOUT THE CODE
 
@@ -17,8 +55,6 @@
 // The order of each value list should be the order the items appear in the array. Any order of keys is acceptable.
 
 // Please solve it without lodash's _.groupBy function.
-
- 
 
 // Example 1:
 
@@ -76,7 +112,6 @@
 // }
 // Explanation:
 // The selector function splits the array by whether each number is greater than 5.
- 
 
 // Constraints:
 
