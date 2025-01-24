@@ -1,6 +1,24 @@
 //SOLUTION
 
+type JSONValueSort = null | boolean | number | string | JSONValueSort[] | { [key: string]: JSONValueSort };
+type Fn = (value: JSONValueSort) => number;
+
+function sortBy(arr: JSONValueSort[], fn: Fn): JSONValueSort[] {
+    const mapped = arr.map((value, index) => ({
+        value,
+        key: fn(value),
+    }));
+
+    mapped.sort((a, b) => a.key - b.key);
+
+    return mapped.map(item => item.value);
+}
+
 //TESTING  
+
+console.log(sortBy([5, 4, 1, 2, 3], (x) => x as number));
+console.log(sortBy([{ "x": 1 }, { "x": 0 }, { "x": -1 }], (d) => (d as { x: number }).x));
+console.log(sortBy([[3, 4], [5, 2], [10, 1]], (x) => (x as number[])[1]));
 
 // MY EXPLANATION ABOUT THE CODE
 
