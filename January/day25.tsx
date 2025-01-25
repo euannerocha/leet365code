@@ -1,6 +1,44 @@
 //SOLUTION
 
+type JSONValueJoin = null | boolean | number | string | JSONValueJoin[] | { [key: string]: JSONValueJoin };
+type ArrayType = { "id": number } & Record<string, JSONValueJoin>;
+
+function join(arr1: ArrayType[], arr2: ArrayType[]): ArrayType[] {
+    const idMap: Map<number, ArrayType> = new Map();
+
+    const mergeObjects = (obj1: ArrayType, obj2: ArrayType): ArrayType => {
+        return { ...obj1, ...obj2 };
+    };
+
+    for (const obj of arr1) {
+        idMap.set(obj.id, obj);
+    }
+
+    for (const obj of arr2) {
+        if (idMap.has(obj.id)) {
+            const merged = mergeObjects(idMap.get(obj.id)!, obj);
+            idMap.set(obj.id, merged);
+        } else {
+            idMap.set(obj.id, obj);
+        }
+    }
+
+    return Array.from(idMap.values()).sort((a, b) => a.id - b.id);
+}
+
 //TESTING 
+
+const arr1 = [
+    { "id": 1, "x": 2, "y": 3 },
+    { "id": 2, "x": 3, "y": 6 }
+];
+
+const arr2 = [
+    { "id": 2, "x": 10, "y": 20 },
+    { "id": 3, "x": 0, "y": 0 }
+];
+
+console.log(join(arr1, arr2));
 
 // MY EXPLANATION ABOUT THE CODE
 
