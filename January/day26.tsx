@@ -1,6 +1,34 @@
 //SOLUTION
 
+type MultiDimensionalArray = (number | MultiDimensionalArray)[];
+
+var flat = function (arr: MultiDimensionalArray, n: number): MultiDimensionalArray {
+    const flatten = (array: MultiDimensionalArray, depth: number): MultiDimensionalArray => {
+        if (depth === 0) return array;
+
+        const result: MultiDimensionalArray = [];
+
+        for (const item of array) {
+            if (Array.isArray(item)) {
+                result.push(...flatten(item, depth - 1));
+            } else {
+                result.push(item);
+            }
+        }
+
+        return result;
+    };
+
+    return flatten(arr, n);
+};
+
 //TESTING 
+
+console.log(flat([1, 2, 3, [4, 5, 6], [7, 8, [9, 10, 11], 12], [13, 14, 15]], 0));
+
+console.log(flat([1, 2, 3, [4, 5, 6], [7, 8, [9, 10, 11], 12], [13, 14, 15]], 1));
+
+console.log(flat([[1, 2, 3], [4, 5, 6], [7, 8, [9, 10, 11], 12], [13, 14, 15]], 2));
 
 // MY EXPLANATION ABOUT THE CODE
 
@@ -26,6 +54,7 @@
 
 // Explanation
 // Passing a depth of n=0 will always result in the original array. This is because the smallest possible depth of a subarray (0) is not less than n=0. Thus, no subarray should be flattened. 
+
 // Example 2:
 
 // Input
@@ -36,6 +65,7 @@
 
 // Explanation
 // The subarrays starting with 4, 7, and 13 are all flattened. This is because their depth of 0 is less than 1. However [9, 10, 11] remains unflattened because its depth is 1.
+
 // Example 3:
 
 // Input
@@ -44,7 +74,8 @@
 // Output
 // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
-// Explanation
+// Explanation:
+
 // The maximum depth of any subarray is 1. Thus, all of them are flattened.
 
 // Constraints:
