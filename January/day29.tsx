@@ -1,6 +1,33 @@
 //SOLUTION
 
+class ArrayWrapper {
+    nums;
+
+    constructor(nums) {
+        this.nums = nums;
+    }
+
+    valueOf() {
+        return this.nums.reduce((sum, num) => sum + num, 0);
+    }
+
+    toString() {
+        return `[${this.nums.join(',')}]`;
+    }
+}
+
 //TESTING 
+
+const obj1 = new ArrayWrapper([1, 2]);
+const obj2 = new ArrayWrapper([3, 4]);
+
+console.log(Number(obj1) + Number(obj2)); 
+console.log(String(obj1)); 
+console.log(String(obj2)); 
+
+const obj3 = new ArrayWrapper([]);
+const obj4 = new ArrayWrapper([]);
+console.log(Number(obj3) + Number(obj4));
 
 // MY EXPLANATION ABOUT THE CODE
 
