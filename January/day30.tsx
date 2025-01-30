@@ -1,10 +1,58 @@
 //SOLUTION
 
+class Calculator {
+    private result: number;
+
+    constructor(value: number) {
+        this.result = value;
+    }
+
+    add(value: number): Calculator {
+        this.result += value;
+        return this;
+    }
+
+    subtract(value: number): Calculator {
+        this.result -= value;
+        return this;
+    }
+
+    multiply(value: number): Calculator {
+        this.result *= value;
+        return this;
+    }
+
+    divide(value: number): Calculator {
+        if (value === 0) {
+            throw new Error("Division by zero is not allowed");
+        }
+        this.result /= value;
+        return this;
+    }
+
+    power(value: number): Calculator {
+        this.result = Math.pow(this.result, value);
+        return this;
+    }
+
+    getResult(): number {
+        return this.result;
+    }
+}
+
 //TESTING 
+
+console.log(new Calculator(10).add(5).subtract(7).getResult()); 
+console.log(new Calculator(2).multiply(5).power(2).getResult()); 
+try {
+    console.log(new Calculator(20).divide(0).getResult()); 
+} catch (error) {
+    console.error(error.message);
+}
 
 // MY EXPLANATION ABOUT THE CODE
 
-// 😒
+// 😒 I liiike this one!
 
 // EXERCISE
 
