@@ -1,5 +1,6 @@
 //LIST SOLUTIONS
 
+// 5 more exercises 
 
 
 // MY EXPLANATION ABOUT THE CODE
