@@ -14,3 +14,7 @@ function calculateTriangleArea(b: number, h: number): number{
 
 calculateTriangleArea(3, 2);
 calculateTriangleArea(7, 9);
+
+// MY EXPLANATION ABOUT THE CODE
+
+//I'm doing a basic exercises list, to practice.
