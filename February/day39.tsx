@@ -1,6 +1,6 @@
 //SOLUTION
 
-//Write a program that receive a number and verify if it is zero, positive or negative
+//Write a program that recieves a number and calculates it's factorial
 
 function factorial(number: number): number {
     let count = 1;

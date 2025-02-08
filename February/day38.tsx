@@ -1,6 +1,6 @@
 //SOLUTION
 
-//Write a program that receive a number and verify if it is zero, positive or negative
+//Write a program that calculate a 10% discount of a number
 
 function discount(number: number): number {
     const calcDiscount = number * 0.90
