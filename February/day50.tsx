@@ -2,7 +2,7 @@
 
 //Write a program that recieves a number and return the Fibonnacci sequence till this number
 
-function fibbonacciNumber(n: number): number[] {
+function fibonacciNumber(n: number): number[] {
     const sequence: number[] = [];
 
     let a = 0, b = 1;
