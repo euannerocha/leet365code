@@ -1,6 +1,6 @@
 //SOLUTION
 
-//Write a program that recieves a wonrd and counts how many vowels it have
+//Write a program that recieves a word and counts how many vowels it have
 
 function countVowels(word: string): number {
     const vowels = ["a", "e", "i", "o", "u"];
