@@ -3,9 +3,9 @@
 //Write a program that recieves a list of products and return the sum
 function sumProducts(p: number[]): number {
     let count = 0;
-    for (let i = 0; i = p.length; i++) {
-        return count ++;
-    };
+    for (let i = 0; i < p.length; i++) {
+        count += p[i];
+    }
 
     return count;
 }
