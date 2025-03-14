@@ -23,7 +23,6 @@ function mergeAlternately(word1: string, word2: string): string {
 
 // Return the merged string.
 
- 
 
 // Example 1:
 
@@ -50,7 +49,6 @@ function mergeAlternately(word1: string, word2: string): string {
 // word2:    p   q 
 // merged: a p b q c   d
  
-
 // Constraints:
 
 // 1 <= word1.length, word2.length <= 100
