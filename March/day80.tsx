@@ -43,8 +43,6 @@ function compress(chars: string[]): number {
 
 // You must write an algorithm that uses only constant extra space.
 
- 
-
 // Example 1:
 
 // Input: chars = ["a","a","b","b","c","c","c"]
@@ -60,7 +58,6 @@ function compress(chars: string[]): number {
 // Input: chars = ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
 // Output: Return 4, and the first 4 characters of the input array should be: ["a","b","1","2"].
 // Explanation: The groups are "a" and "bbbbbbbbbbbb". This compresses to "ab12".
- 
 
 // Constraints:
 
