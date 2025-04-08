@@ -38,8 +38,6 @@ function decodeString(s: string): string {
 
 // The test cases are generated so that the length of the output will never exceed 105.
 
- 
-
 // Example 1:
 
 // Input: s = "3[a]2[bc]"
@@ -53,7 +51,6 @@ function decodeString(s: string): string {
 // Input: s = "2[abc]3[cd]ef"
 // Output: "abcabccdcdcdef"
  
-
 // Constraints:
 
 // 1 <= s.length <= 30
