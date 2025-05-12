@@ -9,7 +9,7 @@ function splitBillBasicImproved(): void {
 
   const totalAmount = parseFloat(totalAmountStr);
   if (isNaN(totalAmount) || totalAmount <= 0) {
-    alert("The total amount must be a number greaterr than zero.");
+    alert("The total amount must be a number greater than zero.");
     return;
   }
 
