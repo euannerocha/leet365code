@@ -20,6 +20,7 @@ const SpiritualVeggie = () => {
   };
 
   return (
+    <>
     <div style={{ textAlign: 'center', padding: '2rem', fontFamily: 'cursive' }}>
       <h1>Consultor Espiritual dos Legumes</h1>
       <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🧘‍♂️🥦</div>
@@ -40,6 +41,7 @@ const SpiritualVeggie = () => {
         Invocar Legume
       </button>
     </div>
+    </>
   );
 };
 
