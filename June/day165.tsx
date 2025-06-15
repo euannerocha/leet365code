@@ -25,7 +25,7 @@ function pathSum(root: TreeNodeSum | null, targetSum: number): number {
         dfs(node.right, currentSum);
     }
 
-    function findPaths(node: TreeNode | null): void {
+    function findPaths(node: TreeNodeSum | null): void {
         if (!node) return;
         
         dfs(node, 0);
