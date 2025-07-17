@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>3D Cube Projection</title>
+    <style>
+      canvas {
+        background: #f0f0f0;
+        display: block;
+        margin: 50px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+
+    <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      const size = 100;
+      const distance = 3;
+      let angleX = 0;
+      let angleY = 0;
+
+      const cubePoints = [
+        { x: -1, y: -1, z: -1 },
+        { x:  1, y: -1, z: -1 },
+        { x:  1, y:  1, z: -1 },
+        { x: -1, y:  1, z: -1 },
+        { x: -1, y: -1, z:  1 },
+        { x:  1, y: -1, z:  1 },
+        { x:  1, y:  1, z:  1 },
+        { x: -1, y:  1, z:  1 }
+      ];
+
+      const edges = [
+        [0,1], [1,2], [2,3], [3,0],
+        [4,5], [5,6], [6,7], [7,4],
+        [0,4], [1,5], [2,6], [3,7]
+      ];
+
+      function rotate(p, angleX, angleY) {
+        let x = p.x;
+        let y = p.y * Math.cos(angleX) - p.z * Math.sin(angleX);
+        let z = p.y * Math.sin(angleX) + p.z * Math.cos(angleX);
+
+        let x2 = x * Math.cos(angleY) + z * Math.sin(angleY);
+        let z2 = -x * Math.sin(angleY) + z * Math.cos(angleY);
+
+        return { x: x2, y: y, z: z2 };
+      }
+
+      function project(p) {
+        const scale = size / (p.z + distance);
+        return {
+          x: p.x * scale + canvas.width / 2,
+          y: p.y * scale + canvas.height / 2
+        };
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const rotated = cubePoints.map(p => rotate(p, angleX, angleY));
+        const projected = rotated.map(project);
+
+        for (let edge of edges) {
+          const p1 = projected[edge[0]];
+          const p2 = projected[edge[1]];
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
+      }
+
+      function animate() {
+        angleX += 0.01;
+        angleY += 0.015;
+        draw();
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+  </body>
+</html>
