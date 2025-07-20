@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rotating Cube with Backface Culling</title>
+    <style>
+      canvas {
+        background: #111;
+        display: block;
+        margin: 50px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="400" height="400"></canvas>
+
+    <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      const cube = [
+        { x: -1, y: -1, z: -1 },
+        { x:  1, y: -1, z: -1 },
+        { x:  1, y:  1, z: -1 },
+        { x: -1, y:  1, z: -1 },
+        { x: -1, y: -1, z:  1 },
+        { x:  1, y: -1, z:  1 },
+        { x:  1, y:  1, z:  1 },
+        { x: -1, y:  1, z:  1 }
+      ];
+
+      const faces = [
+        [0, 1, 2, 3], 
+        [4, 5, 6, 7], 
+        [0, 1, 5, 4], 
+        [2, 3, 7, 6], 
+        [1, 2, 6, 5], 
+        [0, 3, 7, 4]  
+      ];
+
+      const faceColors = ["#e74c3c", "#27ae60", "#2980b9", "#f1c40f", "#9b59b6", "#1abc9c"];
+
+      let angle = 0;
+
+      function rotate(point, angle) {
+        const sinY = Math.sin(angle);
+        const cosY = Math.cos(angle);
+        const sinX = Math.sin(angle * 0.5);
+        const cosX = Math.cos(angle * 0.5);
+
+        let x = point.x;
+        let y = point.y;
+        let z = point.z;
+
+        let dx = cosY * x - sinY * z;
+        let dz = sinY * x + cosY * z;
+        x = dx;
+        z = dz;
+
+        let dy = cosX * y - sinX * z;
+        dz = sinX * y + cosX * z;
+        y = dy;
+        z = dz;
+
+        return { x, y, z };
+      }
+
+      function project(point) {
+        const scale = 100;
+        const distance = 3;
+        const z = point.z + distance;
+        return {
+          x: canvas.width / 2 + (point.x / z) * scale,
+          y: canvas.height / 2 - (point.y / z) * scale
+        };
+      }
+
+      function drawFace(points, color) {
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+          ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.strokeStyle = "#000";
+        ctx.stroke();
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const rotated = cube.map(p => rotate(p, angle));
+        const projected = rotated.map(p => project(p));
+
+        const faceDepths = faces.map((face, i) => {
+          const z = face.reduce((sum, idx) => sum + rotated[idx].z, 0) / face.length;
+          return { index: i, depth: z };
+        }).sort((a, b) => b.depth - a.depth);
+
+        for (let { index } of faceDepths) {
+          const faceIndices = faces[index];
+          const face3D = faceIndices.map(i => rotated[i]);
+          const face2D = faceIndices.map(i => projected[i]);
+
+          const A = face3D[0];
+          const B = face3D[1];
+          const C = face3D[2];
+
+          const AB = { x: B.x - A.x, y: B.y - A.y, z: B.z - A.z };
+          const AC = { x: C.x - A.x, y: C.y - A.y, z: C.z - A.z };
+
+          const normal = {
+            x: AB.y * AC.z - AB.z * AC.y,
+            y: AB.z * AC.x - AB.x * AC.z,
+            z: AB.x * AC.y - AB.y * AC.x
+          };
+
+          if (normal.z < 0) {
+            drawFace(face2D, faceColors[index]);
+          }
+        }
+
+        angle += 0.01;
+        requestAnimationFrame(draw);
+      }
+
+      draw();
+    </script>
+  </body>
+</html>
