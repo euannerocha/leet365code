@@ -1,0 +1,120 @@
+<canvas id="canvas" width="500" height="500"></canvas>
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const cube = [
+  { x: -1, y: -1, z: -1 },
+  { x:  1, y: -1, z: -1 },
+  { x:  1, y:  1, z: -1 },
+  { x: -1, y:  1, z: -1 },
+  { x: -1, y: -1, z:  1 },
+  { x:  1, y: -1, z:  1 },
+  { x:  1, y:  1, z:  1 },
+  { x: -1, y:  1, z:  1 }
+];
+
+const faces = [
+  [0, 1, 2, 3],
+  [4, 5, 6, 7],
+  [0, 1, 5, 4],
+  [2, 3, 7, 6],
+  [1, 2, 6, 5],
+  [0, 3, 7, 4]
+];
+
+const baseColors = [
+  "#ff0000",
+  "#00ff00",
+  "#0000ff",
+  "#ffff00",
+  "#00ffff",
+  "#ff00ff"
+];
+
+let angle = 0;
+
+function rotate(p, a) {
+  const cos = Math.cos(a);
+  const sin = Math.sin(a);
+  const x = p.x * cos - p.z * sin;
+  const z = p.x * sin + p.z * cos;
+  const y = p.y;
+  return { x, y, z };
+}
+
+function project(p) {
+  const scale = 200 / (p.z + 5);
+  return {
+    x: canvas.width / 2 + p.x * scale,
+    y: canvas.height / 2 + p.y * scale
+  };
+}
+
+function shadeColor(hex, percent) {
+  const num = parseInt(hex.slice(1), 16);
+  const r = Math.floor((num >> 16) * percent);
+  const g = Math.floor(((num >> 8) & 0x00FF) * percent);
+  const b = Math.floor((num & 0x0000FF) * percent);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+function drawFace(points, color) {
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length; i++) {
+    ctx.lineTo(points[i].x, points[i].y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.stroke();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const rotated = cube.map(p => rotate(p, angle));
+  const projected = rotated.map(p => project(p));
+
+  const faceDepths = faces.map((face, i) => {
+    const depth = face.reduce((sum, idx) => sum + rotated[idx].z, 0) / face.length;
+    return { index: i, depth };
+  });
+
+  faceDepths.sort((a, b) => b.depth - a.depth);
+
+  const light = { x: 0, y: 0, z: -1 };
+
+  for (let { index } of faceDepths) {
+    const faceIndices = faces[index];
+    const face3D = faceIndices.map(i => rotated[i]);
+    const face2D = faceIndices.map(i => projected[i]);
+
+    const A = face3D[0];
+    const B = face3D[1];
+    const C = face3D[2];
+
+    const AB = { x: B.x - A.x, y: B.y - A.y, z: B.z - A.z };
+    const AC = { x: C.x - A.x, y: C.y - A.y, z: C.z - A.z };
+
+    const normal = {
+      x: AB.y * AC.z - AB.z * AC.y,
+      y: AB.z * AC.x - AB.x * AC.z,
+      z: AB.x * AC.y - AB.y * AC.x
+    };
+
+    const dot = normal.x * light.x + normal.y * light.y + normal.z * light.z;
+    const brightness = Math.max(0, dot / Math.sqrt(normal.x ** 2 + normal.y ** 2 + normal.z ** 2));
+
+    if (normal.z < 0) {
+      const shadedColor = shadeColor(baseColors[index], brightness);
+      drawFace(face2D, shadedColor);
+    }
+  }
+
+  angle += 0.01;
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
