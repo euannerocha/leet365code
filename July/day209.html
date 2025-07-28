@@ -1,0 +1,114 @@
+<canvas id="canvas" width="400" height="400"></canvas>
+<script>
+const canvas = document.getElementById('canvas')
+const ctx = canvas.getContext('2d')
+
+const cube = [
+  [-1, -1, -1], [1, -1, -1],
+  [1, 1, -1], [-1, 1, -1],
+  [-1, -1, 1], [1, -1, 1],
+  [1, 1, 1], [-1, 1, 1]
+]
+
+const faces = [
+  [0, 1, 2, 3], // back
+  [4, 5, 6, 7], // front
+  [0, 1, 5, 4], // bottom
+  [2, 3, 7, 6], // top
+  [1, 2, 6, 5], // right
+  [0, 3, 7, 4]  // left
+]
+
+const multiplyMatrixVector = (v, m) => {
+  const [x, y, z] = v
+  const w = 1
+  const result = []
+  for (let i = 0; i < 4; i++) {
+    result[i] = m[i][0]*x + m[i][1]*y + m[i][2]*z + m[i][3]*w
+  }
+  return [result[0]/result[3], result[1]/result[3], result[2]/result[3]]
+}
+
+const rotationMatrixY = angle => [
+  [Math.cos(angle), 0, Math.sin(angle), 0],
+  [0, 1, 0, 0],
+  [-Math.sin(angle), 0, Math.cos(angle), 0],
+  [0, 0, 0, 1]
+]
+
+const viewMatrix = [
+  [1, 0, 0, 0],
+  [0, 1, 0, 0],
+  [0, 0, 1, -5],
+  [0, 0, 0, 1]
+]
+
+const projectionMatrix = (fov, aspect, near, far) => {
+  const f = 1 / Math.tan(fov / 2)
+  return [
+    [f / aspect, 0, 0, 0],
+    [0, f, 0, 0],
+    [0, 0, (far + near) / (near - far), (2 * far * near) / (near - far)],
+    [0, 0, -1, 0]
+  ]
+}
+
+const multiplyMatrices = (a, b) => {
+  const result = Array(4).fill().map(() => Array(4).fill(0))
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      for (let k = 0; k < 4; k++) {
+        result[i][j] += a[i][k] * b[k][j]
+      }
+    }
+  }
+  return result
+}
+
+const fov = Math.PI / 4
+const aspect = canvas.width / canvas.height
+const near = 0.1
+const far = 100
+const proj = projectionMatrix(fov, aspect, near, far)
+
+const render = time => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  const angle = time * 0.001
+  const rotation = rotationMatrixY(angle)
+  const transform = multiplyMatrices(proj, multiplyMatrices(viewMatrix, rotation))
+
+  const projected = cube.map(v => {
+    const [x, y, z] = multiplyMatrixVector(v, transform)
+    return {
+      screen: [x * canvas.width / 2 + canvas.width / 2, -y * canvas.height / 2 + canvas.height / 2],
+      z
+    }
+  })
+
+  faces.sort((a, b) => {
+    const avgZ1 = a.reduce((sum, i) => sum + projected[i].z, 0) / 4
+    const avgZ2 = b.reduce((sum, i) => sum + projected[i].z, 0) / 4
+    return avgZ2 - avgZ1
+  })
+
+  faces.forEach(face => {
+    const avgZ = face.reduce((sum, i) => sum + projected[i].z, 0) / 4
+    const hue = 200 - avgZ * 30
+    ctx.fillStyle = `hsl(${hue}, 100%, 60%)`
+    ctx.beginPath()
+    face.forEach((i, index) => {
+      const [x, y] = projected[i].screen
+      if (index === 0) ctx.moveTo(x, y)
+      else ctx.lineTo(x, y)
+    })
+    ctx.closePath()
+    ctx.fill()
+    ctx.strokeStyle = "#000"
+    ctx.stroke()
+  })
+
+  requestAnimationFrame(render)
+}
+
+requestAnimationFrame(render)
+</script>
