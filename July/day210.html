@@ -1,0 +1,109 @@
+<canvas id="canvas" width="500" height="500" style="background: black"></canvas>
+<script>
+const canvas = document.getElementById('canvas')
+const ctx = canvas.getContext('2d')
+
+const cube = [
+  [-1, -1, -1],
+  [ 1, -1, -1],
+  [ 1,  1, -1],
+  [-1,  1, -1],
+  [-1, -1,  1],
+  [ 1, -1,  1],
+  [ 1,  1,  1],
+  [-1,  1,  1]
+]
+
+const edges = [
+  [0,1],[1,2],[2,3],[3,0],
+  [4,5],[5,6],[6,7],[7,4],
+  [0,4],[1,5],[2,6],[3,7]
+]
+
+const faces = [
+  [0,1,2,3],
+  [4,5,6,7],
+  [0,1,5,4],
+  [2,3,7,6],
+  [1,2,6,5],
+  [0,3,7,4]
+]
+
+const colors = ['red', 'green', 'blue', 'yellow', 'cyan', 'magenta']
+
+const projectionMatrix = [
+  [1, 0, 0, 0],
+  [0, 1, 0, 0],
+  [0, 0, 1, 0]
+]
+
+const viewMatrix = [
+  [1, 0, 0, 0],
+  [0, 1, 0, 0],
+  [0, 0, 1, -5],
+  [0, 0, 0, 1]
+]
+
+const rotationMatrixY = angle => [
+  [Math.cos(angle), 0, Math.sin(angle), 0],
+  [0, 1, 0, 0],
+  [-Math.sin(angle), 0, Math.cos(angle), 0],
+  [0, 0, 0, 1]
+]
+
+const rotationMatrixX = angle => [
+  [1, 0, 0, 0],
+  [0, Math.cos(angle), -Math.sin(angle), 0],
+  [0, Math.sin(angle), Math.cos(angle), 0],
+  [0, 0, 0, 1]
+]
+
+const multiplyMatrices = (a, b) => {
+  const result = Array(a.length).fill().map(() => Array(b[0].length).fill(0))
+  for (let i = 0; i < a.length; i++)
+    for (let j = 0; j < b[0].length; j++)
+      for (let k = 0; k < a[0].length; k++)
+        result[i][j] += a[i][k] * b[k][j]
+  return result
+}
+
+const transformPoint = (matrix, point) => {
+  const [x, y, z] = point
+  const res = multiplyMatrices(matrix, [[x], [y], [z], [1]])
+  return res.map(r => r[0])
+}
+
+let angle = 0
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+  const rotationY = rotationMatrixY(angle)
+  const rotationX = rotationMatrixX(angle * 0.7)
+  const rotation = multiplyMatrices(rotationY, rotationX)
+  const transform = multiplyMatrices(projectionMatrix, multiplyMatrices(viewMatrix, rotation))
+
+  const projected = cube.map(p => transformPoint(transform, p))
+  const screen = projected.map(([x, y, z]) => [x * 100 + canvas.width/2, y * 100 + canvas.height/2, z])
+
+  faces.forEach((face, i) => {
+    ctx.beginPath()
+    const [x0, y0] = screen[face[0]]
+    ctx.moveTo(x0, y0)
+    face.slice(1).forEach(idx => {
+      const [x, y] = screen[idx]
+      ctx.lineTo(x, y)
+    })
+    ctx.closePath()
+    ctx.fillStyle = colors[i % colors.length]
+    ctx.fill()
+    ctx.strokeStyle = 'black'
+    ctx.stroke()
+  })
+
+  angle += 0.01
+  requestAnimationFrame(draw)
+}
+
+draw()
+</script>
