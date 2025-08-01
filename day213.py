@@ -1,0 +1,125 @@
+import numpy as np
+import plotly.graph_objects as go
+
+def rotation_matrix_x(angle):
+    return np.array([
+        [1, 0, 0],
+        [0, np.cos(angle), -np.sin(angle)],
+        [0, np.sin(angle), np.cos(angle)]
+    ])
+
+def rotation_matrix_y(angle):
+    return np.array([
+        [np.cos(angle), 0, np.sin(angle)],
+        [0, 1, 0],
+        [-np.sin(angle), 0, np.cos(angle)]
+    ])
+
+def project(points):
+    return points[:, :2] / (points[:, 2:] + 5) * 200 + 250
+
+vertices = np.array([
+    [-1, -1, -1],
+    [ 1, -1, -1],
+    [ 1,  1, -1],
+    [-1,  1, -1],
+    [-1, -1,  1],
+    [ 1, -1,  1],
+    [ 1,  1,  1],
+    [-1,  1,  1]
+])
+
+faces = [
+    [0, 1, 2, 3],
+    [4, 5, 6, 7],
+    [0, 1, 5, 4],
+    [2, 3, 7, 6],
+    [1, 2, 6, 5],
+    [0, 3, 7, 4]
+]
+
+light_dir = np.array([0, 0, -1])
+frames = []
+
+for t in range(60):
+    angle_x = np.radians(t * 6)
+    angle_y = np.radians(t * 3)
+
+    rotated = vertices @ rotation_matrix_x(angle_x).T @ rotation_matrix_y(angle_y).T
+    projected = project(rotated)
+
+    face_colors = []
+    for face in faces:
+        v0, v1, v2 = rotated[face[0]], rotated[face[1]], rotated[face[2]]
+        normal = np.cross(v1 - v0, v2 - v0)
+        normal = normal / np.linalg.norm(normal)
+        intensity = np.dot(normal, light_dir)
+        intensity = np.clip(intensity, 0, 1)
+        gray = int(255 * intensity)
+        color = f'rgb({gray},{gray},{gray})'
+        face_colors.append(color)
+
+    frame_data = []
+    for face, color in zip(faces, face_colors):
+        x = [projected[i][0] for i in face] + [projected[face[0]][0]]
+        y = [projected[i][1] for i in face] + [projected[face[0]][1]]
+        frame_data.append(go.Scatter(
+            x=x, y=y,
+            fill='toself',
+            mode='lines',
+            line=dict(color='black'),
+            fillcolor=color
+        ))
+    
+    frames.append(go.Frame(data=frame_data))
+
+fig = go.Figure(
+    data=frames[0].data,
+    frames=frames,
+    layout=go.Layout(
+        width=500, height=500,
+        xaxis=dict(visible=False),
+        yaxis=dict(visible=False),
+        margin=dict(l=0, r=0, t=0, b=0),
+        plot_bgcolor='white',
+        showlegend=False,
+        updatemenus=[],
+        sliders=[],
+        transition=dict(duration=0),
+        frame=dict(duration=100, redraw=True)
+    )
+)
+
+fig.update_layout(
+    dragmode='orbit',
+    scene_camera=dict(
+        up=dict(x=0, y=0, z=1),
+        center=dict(x=0, y=0, z=0),
+        eye=dict(x=1.5, y=1.5, z=1.5)
+    )
+)
+
+fig.layout["autosize"] = False
+
+# Executa a animação automaticamente
+fig.layout["updatemenus"] = [dict(
+    type="buttons",
+    showactive=False,
+    buttons=[dict(
+        method="animate",
+        label="",
+        args=[None, dict(
+            frame=dict(duration=100, redraw=True),
+            fromcurrent=True,
+            transition=dict(duration=0),
+            loop=True
+        )]
+    )],
+    pad=dict(r=10, t=10),
+    x=0.1,
+    xanchor="right",
+    y=0,
+    yanchor="top"
+)]
+
+fig.show()
