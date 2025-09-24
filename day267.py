@@ -13,4 +13,4 @@ def productExceptSelf(nums):
 
     return res
 
-print(productExceptSelf([1,2,3,4]))  # [24, 12, 8, 6]
+print(productExceptSelf([1,2,3,4]))
